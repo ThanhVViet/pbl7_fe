@@ -15,9 +15,9 @@ const Deal = () => {
   return (
     <div className="py-5 lg:px-20">
       <div className="flex items-center justify-between">
-          <Slider {...settings}>
+          {/*<Slider {...settings}>*/}
 
-          </Slider>
+          {/*</Slider>*/}
         {[1, 1, 1, 1, 1].map((item) => (
           <DealCard />
         ))}
