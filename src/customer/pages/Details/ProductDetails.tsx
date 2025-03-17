@@ -13,6 +13,8 @@ import {
     WorkspacePremium
 } from "@mui/icons-material";
 import AddIcon from '@mui/icons-material/Add';
+import SimilarProduct from "../Product/SimilarProduct";
+import ReviewCard from "../Review/ReviewCard";
 
 const ProductDetails = () => {
 
@@ -122,10 +124,21 @@ const ProductDetails = () => {
                             description
                         </p>
                     </div>
+
+                    <div className='mt-12 space-y-5'>
+                        <ReviewCard />
+                        <Divider />
+                    </div>
                 </section>
 
 
 
+            </div>
+            <div className='mt-20'>
+                <h1 className='text-lg font-bold'>Similar Product</h1>
+                <div className='pt-5'>
+                    <SimilarProduct />
+                </div>
             </div>
         </div>
     );
