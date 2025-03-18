@@ -1,5 +1,5 @@
 import React from 'react';
-import {Box, Button, Modal, Typography} from "@mui/material";
+import {Box, Button, FormControlLabel, Modal, Radio, RadioGroup, Typography} from "@mui/material";
 import AddressCard from "./AddressCard";
 import AddressForm from "./AddressForm";
 import PricingCard from "../Cart/PricingCard";
@@ -17,11 +17,30 @@ const style = {
     p: 4,
 };
 
+const paymentGatewayList = [
+    {
+        value: "VNPay",
+        image: "https://cdn.haitrieu.com/wp-content/uploads/2022/10/Logo-VNPAY-QR-1.png",
+        label: ""
+    }
+    ,
+    {
+        value: "STRIPE",
+        image: "https://jnt.asia/wp-content/uploads/2024/01/Stripe-2.png",
+        label: ""
+    }
+]
+
 const Checkout = () => {
 
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+    const [paymentGateway, setPaymentGateway] = React.useState('VNPay');
+
+    const handlePaymentChange = (event: any) => {
+        setPaymentGateway(event.target.value)
+    }
 
     return (
         <>
@@ -58,7 +77,32 @@ const Checkout = () => {
                     </div>
 
                     <div>
+                        <div>
+                            <div className='space-y-3 border p-5 rounded-md'>
+                                <h1 className='text-primary-color font-medium pb-2 text-center'>Choose payment
+                                    gateway</h1>
+                                <RadioGroup
+                                    row
+                                    aria-labelledby="demo-row-radio-buttons-group-label"
+                                    name="row-radio-buttons-group"
+                                    className='flex justify-between pr-0'
+                                    onChange={handlePaymentChange}
+                                    value={paymentGateway}
+                                >
+                                    {
+                                        paymentGatewayList.map((item) =>
+                                            <FormControlLabel
+                                                className={`${item.value === paymentGateway ? "border-primary-color" :"" } border w-[45%] pr-2 rounded-md flex justify-center}`}
+                                                value={item.value} control={<Radio/>} label={
+                                                <img className={`${item.value === "stripe" ? "w-14" : ""} object-cover`}
+                                                     src={item.image} alt={item.label}/>}/>)
+                                    }
+
+                                </RadioGroup>
+                            </div>
+                        </div>
                         <div className='border rounded-md '>
+
                             <PricingCard/>
 
                             <div className='p-5'>
