@@ -1,24 +1,25 @@
 import React from 'react';
-import SellerDrawerList from "../../components/SellerDrawerList/SellerDrawerList";
-import SellerRoutes from "../../../routes/SellerRoutes";
 
-const SellerDashboard = () => {
+import AdminDrawerList from "../../conponents/AdminDrawerList";
+import AdminRoutes from "../../../routes/AdminRoutes";
 
-    const toggleDrawer = () => {}
+const AdminDashboard = () => {
+    const toggleDrawer = () => {
+    }
     return (
         <div>
             <div className='lg:flex lg:h-[90vh]'>
                 <section className='hidden lg:block h-full'>
-                    <SellerDrawerList toggleDrawer={toggleDrawer}/>
+                    <AdminDrawerList toggleDrawer={toggleDrawer}/>
 
                 </section>
 
                 <section className='p-10 w-full lg:w-[80%] overflow-y-auto'>
-                    <SellerRoutes />
+                    <AdminRoutes />
                 </section>
             </div>
         </div>
     );
 };
 
-export default SellerDashboard;
+export default AdminDashboard;

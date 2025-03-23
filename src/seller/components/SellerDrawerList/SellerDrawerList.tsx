@@ -9,6 +9,7 @@ import {
     Receipt,
     ShoppingBag
 } from "@mui/icons-material";
+import DrawerList from "../../../components/DrawerList";
 
 const menu = [
     {
@@ -66,11 +67,11 @@ const menu2 = [
     },
 ]
 
-const SellerDrawerList = () => {
+const SellerDrawerList = ({toggleDrawer}: {toggleDrawer: any}) => {
     return (
-        <div>
-            
-        </div>
+
+            <DrawerList menu={menu} menu2={menu2} toggleDrawer={toggleDrawer}/>
+
     );
 };
 
