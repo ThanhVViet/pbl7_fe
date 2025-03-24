@@ -35,6 +35,9 @@ const AddNewCouponForm = () => {
     })
     return (
         <div>
+            <h1 className='text-2xl font-bold text-primary-color pb-5 text-center'>
+                Create New Coupon
+            </h1>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <Box component={'form'} onSubmit={formik.handleSubmit} sx={{mt: 3}}>
                     <Grid2 container spacing={2}>

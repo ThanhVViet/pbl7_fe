@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import './App.css';
 import Navbar from "./customer/components/Navbar";
 import {ThemeProvider} from "@mui/material";
@@ -14,19 +14,17 @@ import {Route, Routes} from "react-router-dom";
 import BecomeSeller from "./customer/pages/Become Seller/BecomeSeller";
 import SellerDashboard from "./seller/pages/SellerDashboard/SellerDashboard";
 import AdminDashboard from "./admin/pages/Dashboard/AdminDashboard";
+import {fetchProduct} from "./state/fetchProduct";
 
 function App() {
+
+    useEffect(() => {
+        fetchProduct()
+    }, []);
   return (
         <ThemeProvider theme={customTheme} >
             <div>
                 <Navbar />
-                {/*<Home/>*/}
-                {/*<Product />*/}
-                {/*<ProductDetails />*/}
-                {/*<Review />*/}
-                {/*<Cart />*/}
-                {/*<Checkout/>*/}
-                {/*<Account />*/}
                 <Routes>
                     <Route path='/' element={<Home/>}/>
                     <Route path='/products/:category' element={<Product/>}/>

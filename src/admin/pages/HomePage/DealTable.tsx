@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Button, FormControl, InputLabel, MenuItem, Select} from "@mui/material";
+import {Button, FormControl, IconButton, InputLabel, MenuItem, Select} from "@mui/material";
 import TableContainer from "@mui/material/TableContainer";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
@@ -8,7 +8,7 @@ import TableRow from "@mui/material/TableRow";
 import TableBody from "@mui/material/TableBody";
 import {styled} from "@mui/material/styles";
 import TableCell, {tableCellClasses} from "@mui/material/TableCell";
-import {Edit} from "@mui/icons-material";
+import {Delete, Edit} from "@mui/icons-material";
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -57,8 +57,12 @@ const accountStatuses = [
     {status: "BANNED", title: 'Banned', description: 'Account is permanently banned '},
     {status: "CLOSED", title: 'Closed', description: 'Account is  permanently closed'},
 ]
-const ElectronicTable = () => {
+const DealTable = () => {
 
+    const [accountStatus, setAccountStatus] = useState('ACTIVE')
+    const handleChange = (event: any) => {
+        setAccountStatus(event.target.value)
+    }
     return (
         <>
             <TableContainer component={Paper}>
@@ -66,10 +70,11 @@ const ElectronicTable = () => {
                     <TableHead>
                         <TableRow>
                             <StyledTableCell>No</StyledTableCell>
-                            <StyledTableCell>Id</StyledTableCell>
-                            <StyledTableCell align="right">Image</StyledTableCell>
+                            <StyledTableCell>Image</StyledTableCell>
                             <StyledTableCell align="right">Category</StyledTableCell>
-                            <StyledTableCell align="right">Update </StyledTableCell>
+                            <StyledTableCell align="right">Discount</StyledTableCell>
+                            <StyledTableCell align="right">Edit</StyledTableCell>
+                            <StyledTableCell align="right">Delete </StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -87,6 +92,12 @@ const ElectronicTable = () => {
                                         <Edit/>
                                     </Button>
                                 </StyledTableCell>
+
+                                <StyledTableCell align="right">
+                                    <IconButton>
+                                        <Delete sx={{color: 'red'}}/>
+                                    </IconButton>
+                                </StyledTableCell>
                             </StyledTableRow>
                         ))}
                     </TableBody>
@@ -97,5 +108,5 @@ const ElectronicTable = () => {
     );
 };
 
-export default ElectronicTable;
+export default DealTable;
 

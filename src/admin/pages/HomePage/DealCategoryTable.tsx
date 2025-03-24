@@ -1,7 +1,10 @@
 import React from 'react';
 import HomeCategoryTable from "./HomeCategoryTable";
+import {useFormik} from "formik";
 
-const ShopByCategoryTable = () => {
+const DealCategoryTable = () => {
+
+
     return (
         <div>
             <HomeCategoryTable />
@@ -9,4 +12,4 @@ const ShopByCategoryTable = () => {
     );
 };
 
-export default ShopByCategoryTable;
+export default DealCategoryTable;

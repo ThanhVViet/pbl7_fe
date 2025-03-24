@@ -57,10 +57,11 @@ const accountStatuses = [
     {status: "BANNED", title: 'Banned', description: 'Account is permanently banned '},
     {status: "CLOSED", title: 'Closed', description: 'Account is  permanently closed'},
 ]
-const ElectronicTable = () => {
+const HomeCategoryTable = () => {
 
     return (
         <>
+
             <TableContainer component={Paper}>
                 <Table sx={{minWidth: 700}} aria-label="customized table">
                     <TableHead>
@@ -97,5 +98,5 @@ const ElectronicTable = () => {
     );
 };
 
-export default ElectronicTable;
+export default HomeCategoryTable;
 
