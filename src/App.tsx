@@ -10,17 +10,31 @@ import Review from "./customer/pages/Review/Review";
 import Cart from "./customer/pages/Cart/Cart";
 import Checkout from "./customer/pages/Checkout/Checkout";
 import Account from "./customer/pages/Account/Account";
-import {Route, Routes} from "react-router-dom";
+import {Route, Routes, useNavigate} from "react-router-dom";
 import BecomeSeller from "./customer/pages/Become Seller/BecomeSeller";
 import SellerDashboard from "./seller/pages/SellerDashboard/SellerDashboard";
 import AdminDashboard from "./admin/pages/Dashboard/AdminDashboard";
 import {fetchProduct} from "./state/fetchProduct";
+import {useAppDispatch, useAppSelector} from "./state/store";
+import {fetchSellerProfile} from "./state/seller/sellerSlice";
 
 function App() {
 
+    const dispatch = useAppDispatch()
+
+    const {seller} = useAppSelector(store => store)
+    const navigate = useNavigate()
+
     useEffect(() => {
-        fetchProduct()
+        dispatch(fetchSellerProfile(localStorage.getItem('jwt') || ''))
     }, []);
+
+    useEffect(() => {
+        if(seller.profile) {
+            navigate('seller')
+        }
+    }, [seller.profile]);
+    
   return (
         <ThemeProvider theme={customTheme} >
             <div>

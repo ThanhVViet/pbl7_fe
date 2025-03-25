@@ -1,8 +1,13 @@
 import React from 'react';
-import {TextField} from "@mui/material";
+import {Button, TextField} from "@mui/material";
 import {useFormik} from "formik";
+import {useAppDispatch} from "../../../state/store";
+import {sendLoginSignupOtp, signin} from "../../../state/AuthSlice";
+import {sellerLogin} from "../../../state/seller/sellerAuthSlice";
 
 const SellerLoginForm = () => {
+
+    const dispatch = useAppDispatch()
 
     const formik = useFormik({
         initialValues: {
@@ -10,8 +15,19 @@ const SellerLoginForm = () => {
             otp: ''
         }, onSubmit: (values) => {
             console.log('values', values);
+            // values.otp = Number(values.otp)
+            dispatch(sellerLogin({email: values.email, otp: values.otp}))
+            // dispatch(sellerLogin(values)
+
         }
     })
+
+    const handleSendOtp = () => {
+        dispatch(sendLoginSignupOtp({email: formik.values.email}))
+    }
+
+    const handleLogin = () => {
+    }
     return (
         <div>
             <div className='space-y-5'>
@@ -45,6 +61,14 @@ const SellerLoginForm = () => {
                     </div>
 
                 }
+
+                <Button fullWidth variant='contained' sx={{py: '11px'}} onClick={handleSendOtp}>
+                    Send Otp
+                </Button>
+
+                <Button onClick={() => formik.handleSubmit()} fullWidth variant='contained' sx={{py: '11px'}}>
+                    Login
+                </Button>
             </div>
         </div>
     );

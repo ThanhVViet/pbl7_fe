@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {
+    Box,
     Button,
     CircularProgress,
     FormControl,
@@ -25,26 +26,29 @@ import {menLevelTwo} from "../../../data/category/level two/menLevelTwo";
 import {womenLevelTwo} from "../../../data/category/level two/womenLevelTwo";
 import {furnitureLevelTwo} from "../../../data/category/level two/furnitureLevelTwo";
 import {electronicsLevelTwo} from "../../../data/category/level two/electronicsLevelTwo";
+import {useAppDispatch} from "../../../state/store";
+import {createProduct} from "../../../state/seller/sellerProductSlice";
 
-const categoryTwo : {[key: string]: any[]} = {
-  men: menLevelTwo,
+const categoryTwo: { [key: string]: any[] } = {
+    men: menLevelTwo,
     women: womenLevelTwo,
-    kids:[],
+    kids: [],
     home_furniture: furnitureLevelTwo,
-    beauty:[],
+    beauty: [],
     electronics: electronicsLevelTwo
 }
 
-const categoryThree : {[key: string]: any[]} = {
-  men: menLevelThree,
+const categoryThree: { [key: string]: any[] } = {
+    men: menLevelThree,
     women: womenLevelThree,
-    kids:[],
+    kids: [],
     home_furniture: furnitureLevelThree,
-    beauty:[],
+    beauty: [],
     electronics: electronicsLevelThree
 }
 const AddProduct = () => {
     const [uploadImage, setUploadImage] = useState(false)
+    const dispatch = useAppDispatch()
 
     const formik = useFormik({
         initialValues: {
@@ -58,11 +62,12 @@ const AddProduct = () => {
             category: '',
             category2: '',
             category3: '',
-            sizes: '',
+            sizes: ''
 
         },
         onSubmit: (values) => {
             console.log(values)
+            dispatch(createProduct({request: values, jwt: localStorage.getItem('jwt')}))
         }
     })
 
@@ -190,29 +195,32 @@ const AddProduct = () => {
                             <InputLabel id='color-label'>
                                 Color
                             </InputLabel>
-                            <Select labelId='color-label' id='color' name='color'
-                                    value={formik.values.color}
+                            <Select labelId='color-label'
+                                    id='color'
+                                    name='color'
+                                    value={formik.values.color || ""}
                                     onChange={formik.handleChange}
-                                    label='color'
+                                    label='Color'
                             >
                                 <MenuItem value=''>
                                     <em>
                                         None
                                     </em>
-                                    {
-                                        colors.map((color, index) => (
-                                            <MenuItem value={color.name}>
-                                                <div className='flex gap-3'>
+                                </MenuItem>
+
+                                {
+                                    colors.map((color, index) => (
+                                        <MenuItem key={index} value={color.name}>
+                                            <div className='flex gap-3'>
                                                     <span style={{backgroundColor: color.hex}}
                                                           className={`h-5 w-5 rounded-full ${color.name === "White" ? "border" : ""}`}>
 
                                                     </span>
-                                                    <p>{color.name}</p>
-                                                </div>
-                                            </MenuItem>
-                                        ))
-                                    }
-                                </MenuItem>
+                                                <p>{color.name}</p>
+                                            </div>
+                                        </MenuItem>
+                                    ))
+                                }
                             </Select>
                             {
                                 formik.touched.color && formik.errors.color && (
@@ -224,37 +232,33 @@ const AddProduct = () => {
                     </Grid2>
 
                     <Grid2 size={{xs: 12, md: 4, lg: 3}}>
-                        <FormControl fullWidth
-                                     error={formik.touched.sizes && Boolean(formik.errors.sizes)}
-                                     required
+                        <FormControl
+                            fullWidth
+                            error={formik.touched.sizes && Boolean(formik.errors.sizes)}
+                            required
                         >
-                            <InputLabel id='sizes-label'>
-                                Sizes
-                            </InputLabel>
-                            <Select labelId='sizes-label' id='sizes' name='sizes'
-                                    value={formik.values.sizes}
-                                    onChange={formik.handleChange}
-                                    label='Sizes'
+                            <InputLabel id="sizes-label">Sizes</InputLabel>
+                            <Select
+                                labelId="sizes-label"
+                                id="sizes"
+                                name="sizes"
+                                value={formik.values.sizes || ""}
+                                onChange={formik.handleChange}
+                                label="Sizes"
                             >
-                                <MenuItem value=''>
-                                    <em>
-                                        None
-                                    </em>
-                                  <MenuItem value='FREE'>FREE</MenuItem>
-                                  <MenuItem value='S'>S</MenuItem>
-                                  <MenuItem value='M'>M</MenuItem>
-                                  <MenuItem value='L'>L</MenuItem>
-                                  <MenuItem value='XL'>XL</MenuItem>
-                                </MenuItem>
+                                <MenuItem value=""><em>None</em></MenuItem>
+                                <MenuItem value="FREE">FREE</MenuItem>
+                                <MenuItem value="S">S</MenuItem>
+                                <MenuItem value="M">M</MenuItem>
+                                <MenuItem value="L">L</MenuItem>
+                                <MenuItem value="XL">XL</MenuItem>
                             </Select>
-                            {
-                                formik.touched.sizes && formik.errors.sizes && (
-                                    <FormHelperText>{formik.errors.sizes}</FormHelperText>
-                                )
-                            }
-
+                            {formik.touched.sizes && formik.errors.sizes && (
+                                <FormHelperText>{formik.errors.sizes}</FormHelperText>
+                            )}
                         </FormControl>
                     </Grid2>
+
 
                     <Grid2 size={{xs: 12, md: 4, lg: 4}}>
                         <FormControl fullWidth
@@ -269,18 +273,17 @@ const AddProduct = () => {
                                     onChange={formik.handleChange}
                                     label='Category'
                             >
-                                <MenuItem value=''>
 
-                                    {
-                                        mainCategory.map((item, index) => (
-                                            <MenuItem value={item.categoryId}>
-                                                {
-                                                    item.name
-                                                }
-                                            </MenuItem>
-                                        ))
-                                    }
-                                </MenuItem>
+
+                                {
+                                    mainCategory.map((item, index) => (
+                                        <MenuItem value={item.categoryId}>
+                                            {
+                                                item.name
+                                            }
+                                        </MenuItem>
+                                    ))
+                                }
                             </Select>
                             {
                                 formik.touched.category && formik.errors.category && (
@@ -307,14 +310,16 @@ const AddProduct = () => {
                             >
                                 <MenuItem value=''>
 
-                                    {
-                                        formik.values.category && categoryTwo[formik.values.category]?.map((item:any) => (
-                                            <MenuItem value={item.categoryId}>
-                                                {item.name}
-                                            </MenuItem>
-                                        ))
-                                    }
+                                    <em>None</em>
                                 </MenuItem>
+
+                                {
+                                    formik.values.category && categoryTwo[formik.values.category]?.map((item: any) => (
+                                        <MenuItem value={item.categoryId}>
+                                            {item.name}
+                                        </MenuItem>
+                                    ))
+                                }
                             </Select>
                             {
                                 formik.touched.category && formik.errors.category && (
@@ -341,17 +346,17 @@ const AddProduct = () => {
                                 <MenuItem value=''>
                                     <em>None</em>
 
-                                    {
-                                        formik.values.category2 && childCategory(
-                                            categoryThree[formik.values.category],
-                                        formik.values.category2
-                                        )?.map((item:any) => (
-                                            <MenuItem value={item.categoryId}>
-                                                {item.name}
-                                            </MenuItem>
-                                        ))
-                                    }
                                 </MenuItem>
+                                {
+                                    formik.values.category2 && childCategory(
+                                        categoryThree[formik.values.category],
+                                        formik.values.category2
+                                    )?.map((item: any) => (
+                                        <MenuItem value={item.categoryId}>
+                                            {item.name}
+                                        </MenuItem>
+                                    ))
+                                }
                             </Select>
                             {
                                 formik.touched.category && formik.errors.category && (
@@ -362,10 +367,11 @@ const AddProduct = () => {
                         </FormControl>
                     </Grid2>
 
-                    <Grid2 size={{xs:12}}>
-                        <Button sx={{p:"14px"}} color='primary' variant='contained' fullWidth type='submit'>
+                    <Grid2 size={{xs: 12}}>
+                        <Button sx={{p: "14px"}} color='primary' variant='contained' fullWidth onClick={() => formik.handleSubmit()}>
                             {
-                                false? <CircularProgress size='small' sx={{width: "27px", height: "27px"}} /> : "Add Product"
+                                false ? <CircularProgress size='small'
+                                                          sx={{width: "27px", height: "27px"}}/> : "Add Product"
                             }
                         </Button>
                     </Grid2>
