@@ -3,23 +3,22 @@ import "./ProductCard.css"
 import {Button} from "@mui/material";
 import {Favorite, ModeComment} from "@mui/icons-material";
 import {teal} from "@mui/material/colors";
+import {Product} from "../../../types/ProductType";
+import {useNavigate} from "react-router-dom";
 
-const images = [
-    "https://m.media-amazon.com/images/I/81sH0QitrZL._AC_SY879_.jpg",
-    "https://m.media-amazon.com/images/I/91Bgw4WP4dL._AC_SY879_.jpg",
-    "https://m.media-amazon.com/images/I/91YRf8mHoML._AC_SY879_.jpg"
-]
-const ProductCard = () => {
+
+const ProductCard = ({item}: { item: Product }) => {
 
     const [currentImage, setCurrentImage] = useState(0)
     const [isHover, setIsHover] = useState(false)
+    const navigate = useNavigate()
 
     useEffect(() => {
         let interval: any
 
         if (isHover) {
             interval = setInterval(() => {
-                setCurrentImage((prevImage) => (prevImage + 1) % images.length)
+                setCurrentImage((prevImage) => (prevImage + 1) % item?.images.length)
             }, 1000)
         } else if (interval) {
             clearInterval(interval);
@@ -31,13 +30,14 @@ const ProductCard = () => {
 
     return (
         <>
-            <div className='group px-4 relative'>
+            <div onClick={() => navigate(`/product-details/${item?.category?.categoryId}/${item.title}/${item.id}`)} className='group px-4 relative'>
                 <div onMouseEnter={() => setIsHover(true)}
                      onMouseLeave={() => setIsHover(false)}
                      className='card'>
                     {
-                        images.map((item, index) => <img className='card-media object-top' src={item} alt=''
-                                                         style={{transform: `translateX(${(index - currentImage) * 100}%)`}}/>)
+                        item?.images.map((item, index) => <img key={index} className='card-media object-top' src={item}
+                                                               alt=''
+                                                               style={{transform: `translateX(${(index - currentImage) * 100}%)`}}/>)
                     }
 
                     {
@@ -58,20 +58,22 @@ const ProductCard = () => {
                 <div className='details pt-3 space-y-1 group-hover-effect rounded-md'>
                     <div className='name'>
                         <h1>
-                            kosko
+                            {item.seller?.businessDetails?.businessName}
                         </h1>
-                           <p>
-                        grey shirt
-                    </p>
+                        <p>
+                            {item.title}
+                        </p>
 
                     </div>
 
                     <div className='price flex items-center gap-3'>
                         <span className='font-semibold text-gray-800'>
-                            $50
+                            ${item.sellingPrice}
                         </span>
-                        <span className='thin-line-through text-gray-400'>$60</span>
-                        <span className='text-primary-color font-semibold'>10%</span>
+                        <span className='thin-line-through text-gray-400'>
+                            ${item.mrpPrice}
+                        </span>
+                        <span className='text-primary-color font-semibold'>{item.discountPercentage}%</span>
                     </div>
                 </div>
             </div>

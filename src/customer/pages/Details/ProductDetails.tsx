@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import StarIcon from '@mui/icons-material/Star';
 import {teal} from "@mui/material/colors";
 import {Button, Divider} from "@mui/material";
@@ -15,10 +15,25 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import SimilarProduct from "../Product/SimilarProduct";
 import ReviewCard from "../Review/ReviewCard";
+import {useAppDispatch, useAppSelector} from "../../../state/store";
+import {useParams} from "react-router-dom";
+import {fetchProductById} from "../../../state/customer/ProductSlice";
 
 const ProductDetails = () => {
 
     const [quantity, setQuantity] = useState(1)
+    const dispatch = useAppDispatch()
+    const {productId} = useParams()
+    const {product} = useAppSelector(store => store)
+    const [activeImage, setActiveImage] = useState(0)
+
+    useEffect(() => {
+        dispatch(fetchProductById(Number(productId)))
+    }, [productId]);
+
+    const handleActiveImage = (index: number) => {
+        setActiveImage(index)
+    }
 
     return (
         <div className='px-5 lg:px-20 pt-10'>
@@ -26,9 +41,10 @@ const ProductDetails = () => {
                 <section className='flex flex-col lg:flex-row gap-5'>
                     <div className='w-full lg:w-[15%] flex flex-wrap lg:flex-col gap-3'>
                         {
-                            [1, 1, 1].map((item) =>
-                                <img className='lg:w-full w-[50px] cursor-pointer rounded-md'
-                                     src='https://m.media-amazon.com/images/I/817w70GDTLL._AC_SY879_.jpg' alt=''/>
+                            product?.product?.images.map((item, index) =>
+                                <img key={index} onClick={() => handleActiveImage(index)}
+                                     className='lg:w-full w-[50px] cursor-pointer rounded-md'
+                                     src={item} alt=''/>
                             )
                         }
 
@@ -36,14 +52,14 @@ const ProductDetails = () => {
 
                     <div className='w-full lg:w-[85%]'>
                         <img className='w-full rounded-md'
-                             src='https://m.media-amazon.com/images/I/81Y6r7df7OL._AC_SY879_.jpg' alt=''/>
+                             src={product.product?.images[activeImage]} alt=''/>
                     </div>
 
                 </section>
 
                 <section>
-                    <h1 className='font-bold text-lg text-primary-color'>V Fashion</h1>
-                    <p className='text-gray-500 font-semibold'>green t shirt</p>
+                    <h1 className='font-bold text-lg text-primary-color'>{product?.product?.seller?.businessDetails?.businessName}</h1>
+                    <p className='text-gray-500 font-semibold'>{product?.product?.title}</p>
                     <div className='flex justify-between items-center py-2 border w-[180px] px-3 mt-5'>
                         <div className='flex gap-1 items-center'>
                             <span>
@@ -58,10 +74,10 @@ const ProductDetails = () => {
                     <div>
                         <div className='price flex items-center gap-3 mt-5 text-2xl'>
                         <span className='font-semibold text-gray-800'>
-                            $50
+                            ${product?.product?.sellingPrice}
                         </span>
-                            <span className='line-through text-gray-400'>$60</span>
-                            <span className='text-primary-color font-semibold'>10%</span>
+                            <span className='line-through text-gray-400'>${product?.product?.mrpPrice}</span>
+                            <span className='text-primary-color font-semibold'>{product?.product?.discountPercentage}%</span>
                         </div>
                         <p className='text-sm mt-1'>Inclusive of all taxes. Free shipping above $200.</p>
                     </div>
@@ -97,47 +113,49 @@ const ProductDetails = () => {
                             QUANTITY
                         </h1>
                         <div className='flex items-center gap-2 w-[140px] justify-between'>
-                            <Button variant='outlined' disabled={quantity === 1}  onClick={() => setQuantity(quantity - 1)}>
+                            <Button variant='outlined' disabled={quantity === 1}
+                                    onClick={() => setQuantity(quantity - 1)}>
                                 <Remove/>
                             </Button>
                             <span>
                                 {quantity}
                             </span>
-                               <Button variant='outlined' onClick={() => setQuantity(quantity + 1)}>
+                            <Button variant='outlined' onClick={() => setQuantity(quantity + 1)}>
                                 <AddIcon/>
                             </Button>
                         </div>
                     </div>
 
                     <div className='mt-12 flex items-center gap-5'>
-                        <Button fullWidth variant='contained' className='' sx={{py:"1rem"}} startIcon={<AddShoppingCart/>}>
+                        <Button fullWidth variant='contained' className='' sx={{py: "1rem"}}
+                                startIcon={<AddShoppingCart/>}>
                             Add to bag
                         </Button>
 
-                            <Button fullWidth variant='outlined' className='' sx={{py:"1rem"}} startIcon={<FavoriteBorder/>}>
+                        <Button fullWidth variant='outlined' className='' sx={{py: "1rem"}}
+                                startIcon={<FavoriteBorder/>}>
                             Add to wishlist
                         </Button>
                     </div>
 
                     <div className='mt-5'>
                         <p>
-                            description
+                            {product?.product?.description}
                         </p>
                     </div>
 
                     <div className='mt-12 space-y-5'>
-                        <ReviewCard />
-                        <Divider />
+                        <ReviewCard/>
+                        <Divider/>
                     </div>
                 </section>
-
 
 
             </div>
             <div className='mt-20'>
                 <h1 className='text-lg font-bold'>Similar Product</h1>
                 <div className='pt-5'>
-                    <SimilarProduct />
+                    <SimilarProduct/>
                 </div>
             </div>
         </div>

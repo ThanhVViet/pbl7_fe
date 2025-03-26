@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import FilterSection from "./FilterSection";
 import ProductCard from "./ProductCard";
 import {
@@ -13,6 +13,9 @@ import {
     useTheme
 } from "@mui/material";
 import {FilterAlt} from "@mui/icons-material";
+import store, {useAppDispatch, useAppSelector} from "../../../state/store";
+import {getAllProduct} from "../../../state/customer/ProductSlice";
+import {useParams, useSearchParams} from "react-router-dom";
 
 const Product = () => {
 
@@ -20,6 +23,11 @@ const Product = () => {
     const isLarge = useMediaQuery(theme.breakpoints.up("lg"))
     const [sort, setSort] = useState()
     const [page, setPage] = useState(1)
+    const dispatch = useAppDispatch()
+    const [searchParam, setSearchParam] = useSearchParams()
+    const {category} = useParams()
+    const {product} = useAppSelector(store => store)
+
 
     const handleSortChange = (event: any) => {
         setSort(event.target.value);
@@ -27,6 +35,27 @@ const Product = () => {
     const handelPageChange = (value: number) => {
         setPage(value)
     }
+
+    useEffect(() => {
+        const [minPrice, maxPrice] = searchParam.get('price')?.split('-') || []
+        const color = searchParam.get('color')
+        const minDiscount = searchParam.get('discount')? Number(searchParam.get('discount')): undefined
+
+        const  pageNumber = page - 1
+
+        const newFilter = {
+            color: color || '',
+            minPrice: minPrice ? Number(minPrice) : undefined,
+            maxPrice: maxPrice ? Number(maxPrice) : undefined,
+            minDiscount,
+            pageNumber
+        }
+
+        console.log(newFilter)
+
+        dispatch(getAllProduct(newFilter))
+    }, [category, searchParam]);
+
 
     return (
         <div className='-z-10 mt-10'>
@@ -69,7 +98,7 @@ const Product = () => {
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
                                 value={sort}
-                                label="Age"
+                                label="Price"
                                 onChange={handleSortChange}
                             >
                                 <MenuItem value={"price_low"}>Price: Low - High</MenuItem>
@@ -82,13 +111,13 @@ const Product = () => {
                     <Divider/>
                     <section className='products_section grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-y-5 px-5
                      justify-center'>
-                        {[1, 1, 1, 1].map((item) => <ProductCard/>)}
+                        {product?.products?.map((item, index) => <ProductCard key={index} item = {item}/>)}
                     </section>
-                        <div className='flex py-10 justify-center'>
-                            <Pagination count={10} shape="rounded" variant='outlined' color='primary'
-                                        onChange={(e, value) => handelPageChange(value)}
-                            />
-                        </div>
+                    <div className='flex py-10 justify-center'>
+                        <Pagination count={10} shape="rounded" variant='outlined' color='primary'
+                                    onChange={(e, value) => handelPageChange(value)}
+                        />
+                    </div>
                 </div>
 
 

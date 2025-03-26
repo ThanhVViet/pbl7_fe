@@ -17,6 +17,7 @@ import AdminDashboard from "./admin/pages/Dashboard/AdminDashboard";
 import {fetchProduct} from "./state/fetchProduct";
 import {useAppDispatch, useAppSelector} from "./state/store";
 import {fetchSellerProfile} from "./state/seller/sellerSlice";
+import Auth from "./customer/pages/Auth/Auth";
 
 function App() {
 
@@ -41,6 +42,7 @@ function App() {
                 <Navbar />
                 <Routes>
                     <Route path='/' element={<Home/>}/>
+                    <Route path='/login' element={<Auth/>}/>
                     <Route path='/products/:category' element={<Product/>}/>
                     <Route path='/reviews/:productId' element={<Review/>}/>
                     <Route path='/product-details/:categoryId/:name/:productId' element={<ProductDetails/>}/>

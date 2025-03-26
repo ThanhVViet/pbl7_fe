@@ -53,14 +53,14 @@ const Navbar = () => {
                     </IconButton>
 
                     {
-                        true ?
+                        false ?
                             <Button onClick={() => navigate("/account/orders")} className='flex items-center gap-2 '>
                                 <Avatar
                                     sx={{width: 29, height: 29}}
                                     src=''/>
                                 <h1 className='font-semibold hidden lg:block'>ltv</h1>
                             </Button>
-                            : <Button variant='contained'>Login</Button>
+                            : <Button onClick={() => navigate('/login')} variant='contained'>Login</Button>
                     }
 
                     <IconButton>

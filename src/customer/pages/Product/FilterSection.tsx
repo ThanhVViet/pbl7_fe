@@ -5,11 +5,13 @@ import {colors} from "../../../data/filter/colors";
 import {useSearchParams} from "react-router-dom";
 import {price} from "../../../data/filter/price";
 import {discount} from "../../../data/filter/discount";
+import {useAppDispatch} from "../../../state/store";
 
 const FilterSection = () => {
 
     const [expand, setExpand] = useState(false)
     const [searchParams, setSearchParams] = useSearchParams()
+    const dispatch = useAppDispatch()
 
     const handleExpandColor = () => {
         setExpand(!expand);
