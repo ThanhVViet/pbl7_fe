@@ -6,6 +6,7 @@ import {AddShoppingCart, FavoriteBorder, Storefront} from "@mui/icons-material";
 import CategorySheet from "./CategorySheet";
 import {mainCategory} from "../../data/category/mainCategory";
 import {useNavigate} from "react-router-dom";
+import {useAppSelector} from "../../state/store";
 
 const Navbar = () => {
 
@@ -14,6 +15,8 @@ const Navbar = () => {
     const isLarge = useMediaQuery(theme.breakpoints.up("lg"))
     const [selectedCategory, setSelectedCategory] = useState("men")
     const [showCategorySheet, setShowCategorySheet] = useState(false)
+
+    const { auth } = useAppSelector(store => store)
 
     return <>
         <Box className='sticky top-0 left-0 right-0  bg-white' sx={{zIndex: 2}}>
@@ -53,12 +56,12 @@ const Navbar = () => {
                     </IconButton>
 
                     {
-                        false ?
+                        auth.isLogin ?
                             <Button onClick={() => navigate("/account/orders")} className='flex items-center gap-2 '>
                                 <Avatar
                                     sx={{width: 29, height: 29}}
                                     src=''/>
-                                <h1 className='font-semibold hidden lg:block'>ltv</h1>
+                                <h1 className='font-semibold hidden lg:block'>{auth?.user?.fullName}</h1>
                             </Button>
                             : <Button onClick={() => navigate('/login')} variant='contained'>Login</Button>
                     }

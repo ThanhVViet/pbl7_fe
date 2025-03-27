@@ -18,12 +18,13 @@ import {fetchProduct} from "./state/fetchProduct";
 import {useAppDispatch, useAppSelector} from "./state/store";
 import {fetchSellerProfile} from "./state/seller/sellerSlice";
 import Auth from "./customer/pages/Auth/Auth";
+import {fetchUserProfile} from "./state/AuthSlice";
 
 function App() {
 
     const dispatch = useAppDispatch()
 
-    const {seller} = useAppSelector(store => store)
+    const {seller, auth} = useAppSelector(store => store)
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -35,6 +36,10 @@ function App() {
             navigate('seller')
         }
     }, [seller.profile]);
+
+    useEffect(() => {
+        dispatch(fetchUserProfile({jwt: localStorage.getItem('jwt') || auth.jwt}))
+    }, [auth.jwt]);
     
   return (
         <ThemeProvider theme={customTheme} >

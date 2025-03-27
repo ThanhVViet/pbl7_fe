@@ -32,7 +32,7 @@ const RegisterForm = () => {
         <div>
             <h1 className='text-center font-bold text-xl text-primary-color pb-8'>SIGN UP</h1>
 
-            <div className='space-y-3'>
+            <div className='space-y-5'>
                 <TextField
                     fullWidth
                     name='email'
@@ -47,7 +47,10 @@ const RegisterForm = () => {
                 {
                     true &&
 
-                    <div className='space-y-3'>
+                    <div className='space-y-5'>
+                        <div className='space-y-2'>
+
+                        </div>
                         <p className='font-medium text-sm opacity-60'>Enter OTP sent to your email.</p>
                         <TextField
                             fullWidth
@@ -74,9 +77,11 @@ const RegisterForm = () => {
 
                 }
 
-                {/*<Button fullWidth variant='contained' sx={{py: '11px'}} onClick={handleSendOtp}>*/}
-                {/*    Send Otp*/}
-                {/*</Button>*/}
+                {
+                    false && <Button fullWidth variant='contained' sx={{py: '11px'}} onClick={handleSendOtp}>
+                        Send Otp
+                    </Button>
+                }
 
                 <Button onClick={() => formik.handleSubmit()} fullWidth variant='contained' sx={{py: '11px'}}>
                     CREATE ACCOUNT
