@@ -1,6 +1,6 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {api} from "../config/Api";
-import {User} from "../types/Usertype";
+import {User} from "../types/UserType";
 
 export const sendLoginSignupOtp = createAsyncThunk('/auth/sendLoginSignupOtp',
     async ({email}: { email: string }, {rejectWithValue}) => {
