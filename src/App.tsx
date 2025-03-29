@@ -19,6 +19,7 @@ import {useAppDispatch, useAppSelector} from "./state/store";
 import {fetchSellerProfile} from "./state/seller/sellerSlice";
 import Auth from "./customer/pages/Auth/Auth";
 import {fetchUserProfile} from "./state/AuthSlice";
+import PaymentSuccess from "./customer/pages/PaymentSuccess";
 
 function App() {
 
@@ -53,6 +54,7 @@ function App() {
                     <Route path='/product-details/:categoryId/:name/:productId' element={<ProductDetails/>}/>
                     <Route path='/cart' element={<Cart/>}/>
                     <Route path='/checkout' element={<Checkout/>}/>
+                    <Route path='/payment-success/:orderId' element={<PaymentSuccess/>}/>
                     <Route path='/account/*' element={<Account/>}/>
                     <Route path='/become-seller' element={<BecomeSeller/>}/>
                     <Route path='/seller/*' element={<SellerDashboard/>}/>
