@@ -1,25 +1,36 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Box, Button, Divider} from "@mui/material";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import OrderStepper from "./OrderStepper";
 import PaymentIcon from '@mui/icons-material/Payment';
+import {useAppDispatch, useAppSelector} from "../../../state/store";
+import {fetchOrderById, fetchOrderItemById} from "../../../state/customer/OrderSlice";
 
 const OrderDetails = () => {
+
     const navigate = useNavigate()
+    const dispatch = useAppDispatch()
+    const {orderId, orderItemId} = useParams()
+    const {orderItem, currentOrder} = useAppSelector(store => store.order)
 
     const handleCancelOrder = () => {
 
     }
+
+    useEffect(() => {
+        dispatch(fetchOrderById({orderId: Number(orderId), jwt: localStorage.getItem('jwt') || ''}))
+        dispatch(fetchOrderItemById({ orderItemId: Number(orderItemId), jwt: localStorage.getItem('jwt') || ''}))
+    }, []);
     return (
         <Box className='space-y-5'>
             <section className='flex flex-col gap-5 justify-center items-center'>
-                <img className='w-[100px]' src='https://m.media-amazon.com/images/I/71rJtghEonS._AC_SY879_.jpg' alt=''/>
+                <img className='w-[100px]' src={orderItem?.product.images[0]} alt=''/>
 
                 <div className='text-sm space-y-1 text-center'>
                     <h1 className='font-bold'>
-                        name
+                        {orderItem?.product?.seller?.businessDetails?.businessName}
                     </h1>
-                    <p>detail</p>
+                    <p>{orderItem?.product?.title}</p>
                     <p><strong>size: </strong>L</p>
                 </div>
 
@@ -38,14 +49,17 @@ const OrderDetails = () => {
                 <h1 className='font-bold pb-3'>delivery address</h1>
                 <div className='text-sm space-y-2'>
                     <div className='flex gap-5 font-medium'>
-                        <p>name</p>
+                        <p>{currentOrder?.shippingAddress?.name}</p>
 
                         <Divider flexItem orientation='vertical'/>
-                        <p>mobile</p>
+                        <p>{currentOrder?.shippingAddress?.mobile}</p>
                     </div>
 
                     <p>
-                        detail
+                        {currentOrder?.shippingAddress?.address}, {''}
+                        {currentOrder?.shippingAddress?.state}, {''}
+                        {currentOrder?.shippingAddress?.city}, {''}
+                        - {currentOrder?.shippingAddress?.pinCode}
                     </p>
                 </div>
             </div>
@@ -56,7 +70,7 @@ const OrderDetails = () => {
                         <p className='font-bold'>total item price</p>
                         <p>you saved <span className='text-green-500 font-medium text-xs'>$30</span> on this item</p>
                     </div>
-                    <p className='font-medium'>$39</p>
+                    <p className='font-medium'>${orderItem?.sellingPrice}</p>
                 </div>
 
                 <div className='px-5'>
@@ -69,7 +83,7 @@ const OrderDetails = () => {
                 <Divider />
 
                 <div className='px-5 pb-5'>
-                    <p className='text-xs'><strong>sold by: </strong>v clothing</p>
+                    <p className='text-xs'><strong>sold by: </strong>{orderItem?.product?.seller?.businessDetails?.businessName}</p>
                 </div>
 
                 <div className='p-10'>

@@ -5,6 +5,8 @@ import {Favorite, ModeComment} from "@mui/icons-material";
 import {teal} from "@mui/material/colors";
 import {Product} from "../../../types/ProductType";
 import {useNavigate} from "react-router-dom";
+import {useAppDispatch} from "../../../state/store";
+import {addProductToWishlist} from "../../../state/customer/WishlistSlice";
 
 
 const ProductCard = ({item}: { item: Product }) => {
@@ -12,6 +14,7 @@ const ProductCard = ({item}: { item: Product }) => {
     const [currentImage, setCurrentImage] = useState(0)
     const [isHover, setIsHover] = useState(false)
     const navigate = useNavigate()
+    const dispatch = useAppDispatch()
 
     useEffect(() => {
         let interval: any
@@ -28,6 +31,11 @@ const ProductCard = ({item}: { item: Product }) => {
         return () => clearInterval(interval)
     }, [isHover])
 
+    const handleAddProductToWishlist = (e: any) => {
+        e.stopPropagation()
+        item.id && dispatch(addProductToWishlist({productId: item.id, jwt: localStorage.getItem('jwt') || ''}))
+    }
+
     return (
         <>
             <div onClick={() => navigate(`/product-details/${item?.category?.categoryId}/${item.title}/${item.id}`)} className='group px-4 relative'>
@@ -43,7 +51,7 @@ const ProductCard = ({item}: { item: Product }) => {
                     {
                         isHover && <div className='indicator flex flex-col items-center space-y-2'>
                             <div className='flex gap-3'>
-                                <Button variant='contained' color='secondary'>
+                                <Button onClick={(e) => handleAddProductToWishlist(e)} variant='contained' color='secondary'>
                                     <Favorite sx={{color: teal[500]}}/>
                                 </Button>
 
