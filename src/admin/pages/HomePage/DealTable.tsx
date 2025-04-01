@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, FormControl, IconButton, InputLabel, MenuItem, Select} from "@mui/material";
 import TableContainer from "@mui/material/TableContainer";
 import Paper from "@mui/material/Paper";
@@ -9,6 +9,8 @@ import TableBody from "@mui/material/TableBody";
 import {styled} from "@mui/material/styles";
 import TableCell, {tableCellClasses} from "@mui/material/TableCell";
 import {Delete, Edit} from "@mui/icons-material";
+import {useAppDispatch, useAppSelector} from "../../../state/store";
+import {getAllDeals} from "../../../state/admin/DealSlice";
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -60,9 +62,17 @@ const accountStatuses = [
 const DealTable = () => {
 
     const [accountStatus, setAccountStatus] = useState('ACTIVE')
+    const dispatch = useAppDispatch()
+    const {deal} = useAppSelector(store => store)
+
     const handleChange = (event: any) => {
         setAccountStatus(event.target.value)
     }
+
+    useEffect(() => {
+        dispatch(getAllDeals())
+    }, []);
+
     return (
         <>
             <TableContainer component={Paper}>
@@ -78,14 +88,16 @@ const DealTable = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {rows.map((row) => (
-                            <StyledTableRow key={row.name}>
+                        {deal.deals.map((item, index) => (
+                            <StyledTableRow key={item.id}>
                                 <StyledTableCell component="th" scope="row">
-                                    {row.name}
+                                    {index + 1}
                                 </StyledTableCell>
-                                <StyledTableCell>{row.calories}</StyledTableCell>
-                                <StyledTableCell>{row.fat}</StyledTableCell>
-                                <StyledTableCell align="right">{row.carbs}</StyledTableCell>
+                                <StyledTableCell>
+                                    <img alt='' className='w-20 rounded-md' src={item.category.image}/>
+                                </StyledTableCell>
+                                <StyledTableCell>{item.category.categoryId}</StyledTableCell>
+                                <StyledTableCell align="right">{item.discount}</StyledTableCell>
 
                                 <StyledTableCell align="right">
                                     <Button>

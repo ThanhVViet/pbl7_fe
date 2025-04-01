@@ -9,6 +9,10 @@ import cartSlice from "./customer/CartSlice";
 import orderSlice from "./customer/OrderSlice";
 import wishlistSlice from "./customer/WishlistSlice";
 import sellerOrderSlice from "./seller/sellerOrderSlice";
+import transactionSlice from "./seller/transactionSlice";
+import homeCategorySlice from "./admin/AdminSlice";
+import homeSlice from "./customer/CustomerSlice";
+import dealSlice from "./admin/DealSlice";
 
 const rootReducer = combineReducers({
     seller: sellerSlice,
@@ -18,7 +22,14 @@ const rootReducer = combineReducers({
     cart: cartSlice,
     order: orderSlice,
     wishlist: wishlistSlice,
-    sellerOrder: sellerOrderSlice
+    customer: homeSlice,
+
+    sellerOrder: sellerOrderSlice,
+    transaction: transactionSlice,
+
+    //admin
+    admin: homeCategorySlice,
+    deal: dealSlice
 })
 const store = configureStore({
     reducer: rootReducer,

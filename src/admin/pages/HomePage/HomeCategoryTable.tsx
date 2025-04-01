@@ -9,6 +9,7 @@ import TableBody from "@mui/material/TableBody";
 import {styled} from "@mui/material/styles";
 import TableCell, {tableCellClasses} from "@mui/material/TableCell";
 import {Edit} from "@mui/icons-material";
+import {HomeCategory} from "../../../types/HomeCategoryType";
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -30,23 +31,6 @@ const StyledTableRow = styled(TableRow)(({theme}) => ({
     },
 }));
 
-function createData(
-    name: string,
-    calories: number,
-    fat: number,
-    carbs: number,
-    protein: number,
-) {
-    return {name, calories, fat, carbs, protein};
-}
-
-const rows = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('Eclair', 262, 16.0, 24, 6.0),
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
 
 
 const accountStatuses = [
@@ -57,7 +41,7 @@ const accountStatuses = [
     {status: "BANNED", title: 'Banned', description: 'Account is permanently banned '},
     {status: "CLOSED", title: 'Closed', description: 'Account is  permanently closed'},
 ]
-const HomeCategoryTable = () => {
+const HomeCategoryTable = ({data}:{data:HomeCategory[]}) => {
 
     return (
         <>
@@ -74,14 +58,16 @@ const HomeCategoryTable = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {rows.map((row) => (
-                            <StyledTableRow key={row.name}>
+                        {data.map((category, index) => (
+                            <StyledTableRow key={category.id}>
                                 <StyledTableCell component="th" scope="row">
-                                    {row.name}
+                                    {index + 1}
                                 </StyledTableCell>
-                                <StyledTableCell>{row.calories}</StyledTableCell>
-                                <StyledTableCell>{row.fat}</StyledTableCell>
-                                <StyledTableCell align="right">{row.carbs}</StyledTableCell>
+                                <StyledTableCell>{category.id}</StyledTableCell>
+                                <StyledTableCell>
+                                    <img src={category.image} alt='' className='w-20 rounded-md'/>
+                                </StyledTableCell>
+                                <StyledTableCell align="right">{category.categoryId}</StyledTableCell>
 
                                 <StyledTableCell align="right">
                                     <Button>

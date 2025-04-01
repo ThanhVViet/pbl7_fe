@@ -3,8 +3,12 @@ import DealCard from "./DealCard";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import {Slider} from "@mui/material";
+import {useAppSelector} from "../../../../state/store";
 
 const Deal = () => {
+
+  const {customer} = useAppSelector(store => store)
+
   const settings = {
     dots: true,
       infinite: true,
@@ -18,8 +22,9 @@ const Deal = () => {
           {/*<Slider {...settings}>*/}
 
           {/*</Slider>*/}
-        {[1, 1, 1, 1, 1].map((item) => (
-          <DealCard />
+        {
+          customer?.homePageData?.deals.slice(0,6).map((item, index) => (
+          <DealCard key={index} item={item} />
         ))}
       </div>
     </div>

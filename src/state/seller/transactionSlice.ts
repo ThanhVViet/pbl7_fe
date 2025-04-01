@@ -43,6 +43,7 @@ const transactionSlice = createSlice({
     extraReducers: builder => {
         builder.addCase(fetchTransactionBySeller.pending, (state) => {
             state.loading = true;
+            state.error = null;
         })
         builder.addCase(fetchTransactionBySeller.fulfilled, (state, action) => {
             state.transactions = action.payload;
@@ -55,3 +56,5 @@ const transactionSlice = createSlice({
     }
 }
 )
+
+export default transactionSlice.reducer;

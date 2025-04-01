@@ -23,8 +23,8 @@ const DrawerList = ({menu, menu2, toggleDrawer}: DrawerListProps) => {
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
 
-    const handleLogout = async () => {
-        await dispatch(logout()).unwrap()
+    const handleLogout =  () => {
+        dispatch(logout())
         navigate('/')
     }
 
@@ -36,11 +36,12 @@ const DrawerList = ({menu, menu2, toggleDrawer}: DrawerListProps) => {
                         menu.map((item, index) => (
                             <div onClick={
                                 () => {
-                                    navigate(item.path)
+
 
                                     if (item.path === '/') {
                                         handleLogout()
                                     }
+                                     navigate(item.path)
                                 }
                             } className='pr-9 cursor-pointer' key={index}>
                                 <p className={`${item.path === location.pathname ? "bg-primary-color text-white" : "text-primary-color"}
