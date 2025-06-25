@@ -27,14 +27,14 @@ const style = {
 
 const paymentGatewayList = [
     {
-        value: "VNPay",
-        image: "https://cdn.haitrieu.com/wp-content/uploads/2022/10/Logo-VNPAY-QR-1.png",
-        label: "vnpay"
-    },
-    {
         value: "COD",
         image: "https://proship.vn/wp-content/uploads/2022/05/phi-cod-la-gi-phuong-thuc-hinh-thuc-thanh-toan-cod-la-gi-1.png",
         label: "cod"
+    },
+    {
+        value: "VNPay",
+        image: "https://cdn.haitrieu.com/wp-content/uploads/2022/10/Logo-VNPAY-QR-1.png",
+        label: "vnpay"
     }
 ];
 
@@ -43,7 +43,7 @@ const Checkout = () => {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-    const [paymentGateway, setPaymentGateway] = useState('VNPay');
+    const [paymentGateway, setPaymentGateway] = useState('COD');
     const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
     const dispatch = useAppDispatch();
     const {addresses} = useAppSelector(state => state.order);
@@ -72,7 +72,7 @@ const Checkout = () => {
                         jwt: localStorage.getItem('jwt') || '',
                     })).unwrap();
                     await dispatch(clearCart(localStorage.getItem('jwt') || ''));
-                    navigate("/");
+                    navigate("/account/orders");
                 } catch (e) {
                     toast.error("Lỗi khi thanh toán VNPay!");
                 }
@@ -83,7 +83,7 @@ const Checkout = () => {
                         jwt: localStorage.getItem('jwt') || '',
                     })).unwrap();
                     await dispatch(clearCart(localStorage.getItem('jwt') || ''));
-                    navigate("/");
+                    navigate("/account/orders");
                 } catch (e) {
                     toast.error("Lỗi khi tạo đơn hàng!");
                 }
