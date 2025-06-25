@@ -57,7 +57,7 @@ export const createOrder = createAsyncThunk<any, { data: any, jwt: string }>(
             }
             return response.data;
         } catch (e: any) {
-            toast.error('This address is already exists !!')
+            toast.error(' Loi !!')
             console.log('error create order', e.response);
             return rejectWithValue('Error creating  order');
         }

@@ -36,7 +36,7 @@ export const signin = createAsyncThunk<any, { data: any, navigate: any }>('/auth
             if (res.data.code === 1000) {
                 navigate('/')
                 console.log('login success', res.data)
-                toast.success('login success')
+                toast.success('Đăng nhập thành công')
                 localStorage.setItem('jwt', res.data.result.token)
                 const {token, roles} = res.data.result;
 
