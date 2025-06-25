@@ -37,6 +37,7 @@ const ChatBot = () => {
         setMessages(prev => [...prev, userMessage]);
         setInput('');
         setIsLoading(true);
+        setProductCards([]);
         try {
             const response = await fetch('http://localhost:8888/api/v1/ai/chat', {
                 method: 'POST',
