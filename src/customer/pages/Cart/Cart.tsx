@@ -97,7 +97,7 @@ const Cart = () => {
                             <div className='flex gap-3 text-sm items-center'>
                                 <LocalOffer sx={{color: teal[600], fontSize: "17px"}}/>
                             </div>
-                            <span>Apply coupon</span>
+                            <span>Áp dụng mã giảm giá</span>
                         </motion.div>
 
                         <AnimatePresence>
@@ -111,11 +111,11 @@ const Cart = () => {
                                     <TextField 
                                         onChange={handleChange} 
                                         variant='outlined' 
-                                        placeholder='coupon code'
+                                        placeholder='Nhập mã giảm giá'
                                         size='small'
                                     />
                                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                        <Button size='small'>apply</Button>
+                                        <Button size='small'>Áp dụng</Button>
                                     </motion.div>
                                 </motion.div>
                             ) : (
