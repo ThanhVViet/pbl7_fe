@@ -27,6 +27,7 @@ import EmailVerified from "./customer/pages/Auth/EmailVerified";
 import Footer from "./customer/components/Footer";
 import ProductList from "./customer/pages/Product/ProductList/ProductList";
 import Chatbot from "./customer/components/Chatbot";
+import PaymentFailure from "./customer/pages/Checkout/PaymentFailure";
 
 function App() {
 
@@ -72,6 +73,7 @@ function App() {
                     <Route path='/wishlist' element={<Wishlist/>}/>
                     <Route path='/checkout' element={<Checkout/>}/>
                     <Route path='/payment-success/:orderId' element={<PaymentSuccess/>}/>
+                    <Route path='/payment-failure' element={<PaymentFailure/>}/>
                     <Route path='/account/*' element={<Account/>}/>
                     <Route path='/become-seller' element={<BecomeSeller/>}/>
                     <Route path='/seller/*' element={<SellerDashboard/>}/>
