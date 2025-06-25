@@ -17,9 +17,9 @@ const FilterSection = () => {
         setExpand(!expand);
     }
 
-    const updateFilterParams =(e:any) => {
-        const {value, name} =e.target;
-        if(value){
+    const updateFilterParams = (e: any) => {
+        const {value, name} = e.target;
+        if (value) {
             searchParams.set(name, value);
         } else {
             searchParams.delete(name)
@@ -118,31 +118,31 @@ const FilterSection = () => {
                 </section>
                 <Divider/>
 
-                     <section>
-                <FormControl>
-                    <FormLabel className='text-2xl font-semibold' id='discount'
-                               sx={{
-                                   fontSize: "16px",
-                                   fontWeight: "bold",
-                                   color: teal[600],
-                                   pb: "14px"
-                               }}>Discount</FormLabel>
-                    <RadioGroup
-                        aria-labelledby="discount"
-                        defaultValue=""
-                        onChange={updateFilterParams}
-                        name="discount"
-                    >
-                        {
-                            discount.map((item) =>
-                                <FormControlLabel  key={item.name} value={item.value} control={<Radio size='small'/>}
-                                                   label={item.name}/>
-                            )
-                        }
+                {/*<section>*/}
+                {/*    <FormControl>*/}
+                {/*        <FormLabel className='text-2xl font-semibold' id='discount'*/}
+                {/*                   sx={{*/}
+                {/*                       fontSize: "16px",*/}
+                {/*                       fontWeight: "bold",*/}
+                {/*                       color: teal[600],*/}
+                {/*                       pb: "14px"*/}
+                {/*                   }}>Discount</FormLabel>*/}
+                {/*        <RadioGroup*/}
+                {/*            aria-labelledby="discount"*/}
+                {/*            defaultValue=""*/}
+                {/*            onChange={updateFilterParams}*/}
+                {/*            name="discount"*/}
+                {/*        >*/}
+                {/*            {*/}
+                {/*                discount.map((item) =>*/}
+                {/*                    <FormControlLabel key={item.name} value={item.value} control={<Radio size='small'/>}*/}
+                {/*                                      label={item.name}/>*/}
+                {/*                )*/}
+                {/*            }*/}
 
-                    </RadioGroup>
-                </FormControl>
-            </section>
+                {/*        </RadioGroup>*/}
+                {/*    </FormControl>*/}
+                {/*</section>*/}
             </div>
         </div>
     );

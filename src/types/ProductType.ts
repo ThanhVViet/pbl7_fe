@@ -14,10 +14,18 @@ export interface Product {
     category?: Category;
     seller?: Seller;
     createAt?:Date;
-    sizes:string;
+    sizes:string
+    productName: string
+    categoryId: string
+    brand: string
+    name: string;
+    price: number;
+    image: string;
+    specs?: Record<string, string>;
+    // category: string;
 }
 
-interface Category {
+export interface Category {
     id?: number;
     name: string;
     categoryId: string;

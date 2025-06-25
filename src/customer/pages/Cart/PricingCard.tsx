@@ -1,47 +1,42 @@
 import React from 'react';
 import {Divider} from "@mui/material";
+import {useAppSelector} from "../../../state/store";
 
 const PricingCard = () => {
+
+    const {cart} = useAppSelector(store => store.cart)
     return (
         <>
             <div className='space-y-3 p-5'>
+
+
                 <div className='flex justify-between items-center'>
                 <span>
-                    subtotal
+                    giảm giá
                 </span>
 
                     <span>
-                    $99
+                    0đ
                 </span>
                 </div>
 
                 <div className='flex justify-between items-center'>
                 <span>
-                    discount
+                    phí ship
                 </span>
 
                     <span>
-                    $180
+                    miễn phí
                 </span>
                 </div>
 
                 <div className='flex justify-between items-center'>
                 <span>
-                    shipping
+                    phí hệ tống
                 </span>
 
                     <span>
-                    $5
-                </span>
-                </div>
-
-                <div className='flex justify-between items-center'>
-                <span>
-                    platform fee
-                </span>
-
-                    <span>
-                    free
+                    miễn phí
                 </span>
                 </div>
 
@@ -52,11 +47,15 @@ const PricingCard = () => {
 
             <div className='flex justify-between items-center p-5'>
                 <span className='font-bold'>
-                    total
+                    Tổng tiền
                 </span>
 
                 <span>
-                    $200
+                                            {new Intl.NumberFormat('vi-VN', {
+                                                style: 'currency',
+                                                currency: 'VND'
+                                            }).format(Number(cart?.totalSellingPrice))}
+
                 </span>
             </div>
         </>

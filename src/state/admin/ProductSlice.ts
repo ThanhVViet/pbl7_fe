@@ -1,6 +1,7 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {api} from "../config/Api";
-import {Product} from "../types/ProductType";
+import {api} from "../../config/Api";
+import {Product} from "../../types/ProductType";
+import {toast} from "sonner";
 
 // export const allProducts = createAsyncThunk<Product[], any>('/sellerProduct/allProducts',
 //     async (jwt: string, {rejectWithValue}) => {
@@ -17,10 +18,20 @@ import {Product} from "../types/ProductType";
 //         }
 //     })
 
-export const allProducts = createAsyncThunk<PaginatedProductResponse, any>('/product/allProducts',
-    async (jwt: string, {rejectWithValue}) => {
+export const allProducts = createAsyncThunk<PaginatedProductResponse, {
+    jwt: string,
+    page: number,
+    brand?: string,
+    category?: string
+}>('/adminProduct/allProducts',
+    async ({jwt, page, brand, category}, {rejectWithValue}) => {
         try {
-            const res = await api.get('/product/find-all', {
+            const params = new URLSearchParams();
+            params.append('pageNumber', page.toString());
+            if (brand) params.append('brand', brand);
+            if (category) params.append('category', category);
+
+            const res = await api.get(`/product/find-all?${params.toString()}`, {
                 headers: {
                     Authorization: `Bearer ${jwt}`
                 }
@@ -32,8 +43,8 @@ export const allProducts = createAsyncThunk<PaginatedProductResponse, any>('/pro
         }
     })
 
-export const createProduct = createAsyncThunk<Product, {request:any, jwt:string | null}>(
-    '/product/createProduct',
+export const createProduct = createAsyncThunk<Product, { request: any, jwt: string | null }>(
+    '/adminProduct/createProduct',
     async ({request, jwt}, {rejectWithValue}) => {
         try {
             const res = await api.post('/product/add', request, {
@@ -45,6 +56,24 @@ export const createProduct = createAsyncThunk<Product, {request:any, jwt:string 
             return res.data
         } catch (e) {
             console.log('error create product ', e)
+        }
+    }
+)
+
+export const updateProduct = createAsyncThunk<Product, { productId: number, request: any, jwt: string | null }>(
+    '/adminProduct/updateProduct',
+    async ({productId, request, jwt}, {rejectWithValue}) => {
+        try {
+            const res = await api.post(`/product/update/${productId}`, request, {
+                headers: {
+                    Authorization: `Bearer ${jwt}`
+                }
+            })
+            console.log('update product success ', res.data)
+            toast.success('Cập nhật sản phẩm thành công !')
+            return res.data
+        } catch (e) {
+            console.log('error update product ', e)
         }
     }
 )
@@ -64,7 +93,7 @@ interface SellerProductState {
     products: Product[],
     loading: boolean,
     error: string | null | undefined
-        pageable: {
+    pageable: {
         pageNumber: number;
         pageSize: number;
         totalElements: number;
@@ -84,8 +113,8 @@ const initialState: SellerProductState = {
     }
 }
 
-const productSlice = createSlice({
-    name: 'product',
+const adminProductSlice = createSlice({
+    name: 'adminProduct',
     initialState,
     reducers: {},
     extraReducers: (builder) => {
@@ -121,4 +150,4 @@ const productSlice = createSlice({
     }
 })
 
-export default productSlice.reducer;
+export default adminProductSlice.reducer;

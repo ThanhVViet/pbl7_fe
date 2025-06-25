@@ -21,5 +21,6 @@ export const colors = [
     { "name": "Khaki", "hex": "#F0E68C" },
     { "name": "Orange", "hex": "#FFA500" },
     { "name": "Maroon", "hex": "#800000" },
-    { "name": "Teal", "hex": "#008080" }
+    { "name": "Teal", "hex": "#008080" },
+     { "name": "Silver", "hex": "#C0C0C0" }
 ];

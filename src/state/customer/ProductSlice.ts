@@ -2,13 +2,17 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {api} from "../../config/Api";
 import {Product} from "../../types/ProductType";
 
-const API_URL = 'http://localhost:5454'
 
-export const fetchProductById = createAsyncThunk(
+export const fetchProductById = createAsyncThunk<any, {productId: number, jwt: string}>(
     '/products/fetchProductById',
-    async (productId: number, {rejectWithValue}) => {
+    async ({productId, jwt}, {rejectWithValue}) => {
         try {
-            const res = await api.get(`${API_URL}/products/${productId}`)
+            const res = await api.get(`/product/${productId}`,
+                {
+                    headers:{
+                        Authorization: `Bearer ${jwt}`
+                    }
+                })
             console.log('product by id', res.data)
             return res.data
         } catch (e) {
@@ -20,9 +24,9 @@ export const fetchProductById = createAsyncThunk(
 
 export const searchProduct = createAsyncThunk(
     '/products/searchProduct',
-    async (query, {rejectWithValue}) => {
+    async (query: string, {rejectWithValue}) => {
         try {
-            const res = await api.get(`${API_URL}/products/search`, {
+            const res = await api.get(`/product/search`, {
                 params: {
                     query
                 }
@@ -41,17 +45,22 @@ export const getAllProduct = createAsyncThunk<any, any>(
     async (params, {rejectWithValue}) => {
 
         try {
-            const res = await api.get(`${API_URL}/products`,
+            const res = await api.get('/product/find-all',
                 {
                     params: {
                         ...params,
                         pageNumber: params.pageNumber || 0,
+                        category: params.category
+
+                    },
+                    headers:{
+                        Authorization: `Bearer ${localStorage.getItem('jwt')}`
                     }
                 })
             console.log('all product', res.data)
             return res.data
         } catch (e) {
-            console.log('error fetch product by id', e)
+            console.log('error fetch all product', e)
             return rejectWithValue(e)
         }
     }
@@ -100,8 +109,8 @@ const productSlice = createSlice({
             state.searchProducts = action.payload
         })
         builder.addCase(searchProduct.rejected, (state, action) => {
-            state.loading = false
-            state.error = action.error.message
+         state.searchProducts = [];
+
         })
 
         builder.addCase(getAllProduct.pending, (state) => {

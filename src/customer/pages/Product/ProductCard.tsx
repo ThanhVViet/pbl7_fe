@@ -38,7 +38,8 @@ const ProductCard = ({item}: { item: Product }) => {
 
     return (
         <>
-            <div onClick={() => navigate(`/product-details/${item?.category?.categoryId}/${item.title}/${item.id}`)} className='group px-4 relative'>
+            <div onClick={() => navigate(`/product-details/${item?.category?.categoryId}/${item.title}/${item.id}`)}
+                 className='group px-4 relative'>
                 <div onMouseEnter={() => setIsHover(true)}
                      onMouseLeave={() => setIsHover(false)}
                      className='card'>
@@ -51,7 +52,8 @@ const ProductCard = ({item}: { item: Product }) => {
                     {
                         isHover && <div className='indicator flex flex-col items-center space-y-2'>
                             <div className='flex gap-3'>
-                                <Button onClick={(e) => handleAddProductToWishlist(e)} variant='contained' color='secondary'>
+                                <Button onClick={(e) => handleAddProductToWishlist(e)} variant='contained'
+                                        color='secondary'>
                                     <Favorite sx={{color: teal[500]}}/>
                                 </Button>
 
@@ -75,13 +77,14 @@ const ProductCard = ({item}: { item: Product }) => {
                     </div>
 
                     <div className='price flex items-center gap-3'>
-                        <span className='font-semibold text-gray-800'>
-                            ${item.sellingPrice}
-                        </span>
-                        <span className='thin-line-through text-gray-400'>
-                            ${item.mrpPrice}
-                        </span>
-                        <span className='text-primary-color font-semibold'>{item.discountPercentage}%</span>
+                    <span className='font-semibold text-gray-800'>
+                        {new Intl.NumberFormat('vi-VN', {style: 'currency', currency: 'VND'}).format(item.sellingPrice)}
+                    </span>
+
+                        {/*<span className='thin-line-through text-gray-400'>*/}
+                        {/*    ${item.mrpPrice}*/}
+                        {/*</span>*/}
+                        {/*<span className='text-primary-color font-semibold'>{item.discountPercentage}%</span>*/}
                     </div>
                 </div>
             </div>

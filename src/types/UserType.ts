@@ -1,4 +1,3 @@
-
 export interface Address{
     id?: number,
     name: string,
@@ -6,7 +5,6 @@ export interface Address{
     address: string,
     city: string,
     state: string,
-    pinCode: string,
     locality: string,
 }
 
@@ -19,14 +17,9 @@ export interface User {
     id?: number,
     email: string,
     password?: string,
-    fullName: string,
+    username: string,
     mobile: string,
     addresses?: Address[],
     role: UserRole,
+    enabled?: boolean
 }
-// export interface UserState {
-//     user: User | null,
-//     loading: boolean,
-//     error: string | null,
-//     profileUpdated: boolean
-// }

@@ -5,13 +5,12 @@ import {sumCartItemMrpPrice} from "../../utils/sumCartItemMrpPrice";
 import {sumCartItemSellingPrice} from "../../utils/sumCartItemSellingPrice";
 import {applyCoupon} from "./CouponSlice";
 
-const API_URL = '/api/cart';
 
 export const fetchUserCart = createAsyncThunk<Cart, string>(
     'cart/fetchUserCart',
     async (jwt: string, {rejectWithValue}) => {
         try {
-            const response = await api.get(API_URL, {
+            const response = await api.get('/cart/user-cart', {
                 headers: {
                     Authorization: `Bearer ${jwt}`
                 }
@@ -27,7 +26,7 @@ export const fetchUserCart = createAsyncThunk<Cart, string>(
 
 interface AddItemRequest {
     productId: number | undefined,
-    size: string,
+    color: string,
     quantity: number
 }
 
@@ -35,7 +34,7 @@ export const addItemToCart = createAsyncThunk<CartItem, { jwt: string | null; re
     'cart/addItemToCart',
     async ({jwt, request}, {rejectWithValue}) => {
         try {
-            const response = await api.put(`${API_URL}/add`, request, {
+            const response = await api.put(`/cart/add`, request, {
                 headers: {
                     Authorization: `Bearer ${jwt}`
                 }
@@ -52,7 +51,7 @@ export const deleteCartItem = createAsyncThunk<any, { jwt: string | null; cartIt
     'cart/deleteCartItem',
     async ({jwt, cartItemId}, {rejectWithValue}) => {
         try {
-            const response = await api.delete(`${API_URL}/item/${cartItemId}`, {
+            const response = await api.delete(`/cart/cart-item/${cartItemId}/remove`, {
                 headers: {
                     Authorization: `Bearer ${jwt}`
                 }
@@ -65,11 +64,11 @@ export const deleteCartItem = createAsyncThunk<any, { jwt: string | null; cartIt
     }
 )
 
-export const updateCartItem = createAsyncThunk<any, { jwt: string | null; cartItemId: number, cartItem: any }>(
+export const updateCartItem = createAsyncThunk<any, { jwt: string | null; data: any }>(
     'cart/updateCartItem',
-    async ({jwt, cartItemId, cartItem}, {rejectWithValue}) => {
+    async ({jwt, data}, {rejectWithValue}) => {
         try {
-            const response = await api.put(`${API_URL}/item/${cartItemId}`, cartItem, {
+            const response = await api.put(`/cart/cart-item/update`, data, {
                 headers: {
                     Authorization: `Bearer ${jwt}`
                 }
@@ -82,6 +81,22 @@ export const updateCartItem = createAsyncThunk<any, { jwt: string | null; cartIt
         }
     }
 )
+
+export const clearCart = createAsyncThunk<Cart, string>(
+    "cart/clearCart",
+    async (jwt, { rejectWithValue }) => {
+        try {
+            const response = await api.put("/cart/clear", null, {
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+            });
+            return response.data;
+        } catch (e: any) {
+            return rejectWithValue("Error clearing cart");
+        }
+    }
+);
 
 interface CartState {
     cart: Cart | null,
@@ -111,9 +126,12 @@ const cartSlice = createSlice({
             state.error = null;
         })
         builder.addCase(fetchUserCart.fulfilled, (state, action) => {
+            console.log('Fetched user cart payload:', action.payload);  // Log the payload to ensure it's correct
             state.loading = false;
             state.cart = action.payload;
-        })
+            console.log('Updated cart state:', state.cart);  // Log the updated cart state
+        });
+
         builder.addCase(fetchUserCart.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload as string;
@@ -124,7 +142,9 @@ const cartSlice = createSlice({
         })
         builder.addCase(addItemToCart.fulfilled, (state, action) => {
             if (state.cart) {
-                state.cart.cartItems.push(action.payload);
+                state.cart.items?.push(action.payload);
+                // state.cart.totalSellingPrice = sumCartItemSellingPrice(state.cart.cartItems);
+
             }
             state.loading = false;
         })
@@ -140,10 +160,10 @@ const cartSlice = createSlice({
         })
         builder.addCase(deleteCartItem.fulfilled, (state, action) => {
             if (state.cart) {
-                state.cart.cartItems = state.cart.cartItems.filter(item => item.id !== action.meta.arg.cartItemId);
+                state.cart.items = state.cart.items.filter(item => item.id !== action.meta.arg.cartItemId);
 
-                const mrpPrice = sumCartItemMrpPrice(state.cart?.cartItems || []);
-                const sellingPrice = sumCartItemSellingPrice(state.cart?.cartItems || []);
+                const mrpPrice = sumCartItemMrpPrice(state.cart?.items || []);
+                const sellingPrice = sumCartItemSellingPrice(state.cart?.items || []);
                 state.cart.totalSellingPrice = sellingPrice;
                 state.cart.totalMrpPrice = mrpPrice;
 
@@ -160,15 +180,15 @@ const cartSlice = createSlice({
         })
         builder.addCase(updateCartItem.fulfilled, (state, action) => {
             if (state.cart) {
-                const index = state.cart.cartItems.findIndex(item => item.id === action.meta.arg.cartItemId);
+                const index = state.cart.items.findIndex(item => item.id === action.meta.arg.data.cartItemId);
                 if (index !== -1) {
-                    state.cart.cartItems[index] = {
-                        ...state.cart.cartItems[index],
+                    state.cart.items[index] = {
+                        ...state.cart.items[index],
                         ...action.payload
                     }
                 }
-                const mrpPrice = sumCartItemMrpPrice(state.cart?.cartItems || [])
-                const sellingPrice = sumCartItemSellingPrice(state.cart?.cartItems || [])
+                const mrpPrice = sumCartItemMrpPrice(state.cart?.items || [])
+                const sellingPrice = sumCartItemSellingPrice(state.cart?.items || [])
                 state.cart.totalSellingPrice = sellingPrice
                 state.cart.totalMrpPrice = mrpPrice
             }
@@ -180,11 +200,24 @@ const cartSlice = createSlice({
         })
 
         builder.addCase(applyCoupon.fulfilled, (state, action) => {
-                state.loading = false;
-                state.cart = action.payload;
+            state.loading = false;
+            state.cart = action.payload;
         })
+
+        builder.addCase(clearCart.fulfilled, (state, action) => {
+            state.cart = action.payload;
+            state.loading = false;
+        });
+        builder.addCase(clearCart.pending, (state) => {
+            state.loading = true;
+        });
+        builder.addCase(clearCart.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload as string;
+        });
     }
 
 })
 
+export const { resetCartState } = cartSlice.actions;
 export default cartSlice.reducer;

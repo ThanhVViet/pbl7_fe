@@ -4,11 +4,11 @@ import {useAppSelector} from "../../../state/store";
 
 const ShopByCategoryTable = () => {
 
-    const {customer} = useAppSelector(store => store)
+    const {categories} = useAppSelector(store => store.admin)
 
     return (
         <div>
-            <HomeCategoryTable data={customer?.homePageData?.shopByCategories || []}/>
+            <HomeCategoryTable data={categories || []}/>
         </div>
     );
 };

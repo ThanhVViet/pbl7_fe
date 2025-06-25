@@ -23,7 +23,7 @@ const DrawerList = ({menu, menu2, toggleDrawer}: DrawerListProps) => {
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
 
-    const handleLogout =  () => {
+    const handleLogout = () => {
         dispatch(logout())
         navigate('/')
     }
@@ -32,29 +32,43 @@ const DrawerList = ({menu, menu2, toggleDrawer}: DrawerListProps) => {
         <div className='h-full'>
             <div className='flex flex-col justify-between h-full w-[300px] border-r py-5'>
                 <div className='space-y-2'>
-                    {
-                        menu.map((item, index) => (
-                            <div onClick={
-                                () => {
+                    {menu.map((item, index) => {
+                        let isActive = false;
+                        if (item.path === '/admin') {
+                            isActive = location.pathname === '/admin';
+                        } else if (item.path === '/admin/category') {
+                            isActive = location.pathname === '/admin/category' || location.pathname === '/admin/add-category';
+                        } else {
+                            isActive = location.pathname.startsWith(item.path);
+                        }
 
-
+                        return (
+                            <div
+                                onClick={() => {
                                     if (item.path === '/') {
-                                        handleLogout()
+                                        handleLogout();
+                                    } else {
+                                        navigate(item.path);
                                     }
-                                     navigate(item.path)
-                                }
-                            } className='pr-9 cursor-pointer' key={index}>
-                                <p className={`${item.path === location.pathname ? "bg-primary-color text-white" : "text-primary-color"}
-                                    flex items-center px-5 py-3 rounded-r-full`}>
+                                }}
+                                className="pr-9 cursor-pointer"
+                                key={index}
+                            >
+                                <p
+                                    className={`${
+                                        isActive ? "bg-primary-color text-white" : "text-primary-color"
+                                    } flex items-center px-5 py-3 rounded-r-full`}
+                                >
                                     <ListItemIcon>
-                                        {item.path === location.pathname ? item.activeIcon : item.icon}
+                                        {isActive ? item.activeIcon : item.icon}
                                     </ListItemIcon>
 
                                     <ListItemText primary={item.name}/>
                                 </p>
                             </div>
-                        ))
-                    }
+                        );
+                    })}
+
 
                 </div>
 

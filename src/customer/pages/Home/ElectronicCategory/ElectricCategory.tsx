@@ -8,7 +8,7 @@ const ElectricCategory = () => {
     return (
         <div className='flex flex-wrap justify-between py-5 lg:px-20 border-b'>
             {
-                customer?.homePageData?.electricCategories.slice(0,7).map(((item, index) =>  <ElectricCategoryCard
+                customer?.homePageData?.electricCategories?.slice(0,7).map(((item, index) =>  <ElectricCategoryCard
                     item={item}
                     key={index} />))
             }

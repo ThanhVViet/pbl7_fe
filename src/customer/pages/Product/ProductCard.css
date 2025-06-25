@@ -1,5 +1,6 @@
 .card {
-    @apply relative w-[250px] h-[350px] overflow-hidden
+    @apply relative w-[250px] h-[350px] overflow-hidden rounded-lg;
+    transition: all 0.3s ease-in-out;
 }
 
 .card-media {
@@ -10,7 +11,7 @@
     height: 100%;
     transition: transform .5s ease-in-out;
     cursor: pointer;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 .indicator {
@@ -18,7 +19,14 @@
     bottom: 16px;
     left: 50%;
     transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
 }
+
+.card:hover .indicator {
+    opacity: 1;
+}
+
 .indicator-button {
     width: 10px;
     height: 10px;
@@ -36,12 +44,27 @@
     text-decoration: line-through;
     text-decoration-thickness: 1px;
 }
+
 .group-hover-effect{
     padding: 1rem;
-    transition: transform 0.3s;
+    transition: all 0.3s ease-in-out;
+    background-color: white;
+}
+
+.group {
+    transition: all 0.3s ease-in-out;
+}
+
+.group:hover {
+    transform: translateY(-4px);
+}
+
+.group:hover .card {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
 .group:hover .group-hover-effect{
     transform: translateY(0.25rem);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background-color: white;
 }

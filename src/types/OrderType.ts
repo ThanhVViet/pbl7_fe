@@ -3,12 +3,16 @@ import {Product} from "./ProductType";
 
 export interface OrderState {
     orders: Order[] | null,
+    addresses: Address[],
+    address: Address | null,
     orderItem: OrderItem | null,
     currentOrder: Order | null,
     paymentOrder: any | null,
     loading: boolean,
     error: string | null
     orderCancelled: boolean,
+    lastOrderTime: number | null
+
 }
 
 export interface Order {
@@ -16,16 +20,18 @@ export interface Order {
     orderId: string,
     user: User,
     sellerId: number,
-    orderItems: OrderItem[],
+    items: OrderItem[],
     orderDate: string,
     shippingAddress: Address,
     paymentDetails: any,
     totalMrpPrice: number,
-    totalSellingPrice?: number,
+    totalPrice?: number,
     discount?: number,
     orderStatus: OrderStatus,
     totalItem: number,
     deliveryDate: string,
+    createdAt: string,
+    addressId: number,
 }
 
 export enum OrderStatus {
@@ -43,6 +49,10 @@ export interface OrderItem {
     quantity: number,
     mrpPrice: number,
     sellingPrice: number,
+    totalPrice: number,
     userId: number,
+    images: string[],
+    productName: string,
+    productPrice: number
 }
 

@@ -1,0 +1,35 @@
+.swiper-button-next,
+.swiper-button-prev {
+    color: #10b981 !important;
+    background: white;
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50%;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+    font-size: 20px !important;
+    font-weight: bold;
+}
+
+.swiper-button-disabled {
+    opacity: 0.5 !important;
+}
+
+.swiper-pagination-bullet {
+    background: #10b981 !important;
+}
+
+.swiper-pagination-bullet-active {
+    background: #059669 !important;
+}
+
+/* Add hover effect */
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+    background: #f3f4f6;
+    transform: scale(1.1);
+    transition: all 0.2s ease;
+} 

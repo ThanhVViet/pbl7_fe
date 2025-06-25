@@ -39,22 +39,23 @@ const Product = () => {
     useEffect(() => {
         const [minPrice, maxPrice] = searchParam.get('price')?.split('-') || []
         const color = searchParam.get('color')
-        const minDiscount = searchParam.get('discount')? Number(searchParam.get('discount')): undefined
+        const minDiscount = searchParam.get('discount') ? Number(searchParam.get('discount')) : undefined
 
-        const  pageNumber = page - 1
+        const pageNumber = page - 1
 
         const newFilter = {
             color: color || '',
             minPrice: minPrice ? Number(minPrice) : undefined,
             maxPrice: maxPrice ? Number(maxPrice) : undefined,
             minDiscount,
-            pageNumber
+            pageNumber,
+            category
         }
 
         console.log(newFilter)
 
         dispatch(getAllProduct(newFilter))
-    }, [category, searchParam]);
+    }, [category, searchParam, page, sort]);
 
 
     return (
@@ -111,13 +112,27 @@ const Product = () => {
                     <Divider/>
                     <section className='products_section grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-y-5 px-5
                      justify-center'>
-                        {product?.products?.map((item, index) => <ProductCard key={index} item = {item}/>)}
+                        {
+                            product?.products.length > 0 ?
+                                product?.products?.map((item, index) => <ProductCard key={index} item={item}/>)
+                                : <div className='flex items-center justify-center w-[60vw] h-[60vh]'>
+                                    <p className='text-xl text-gray-400 font-semibold text-center'>
+                                        Không tìm thấy sản phẩm
+                                    </p>
+                                </div>
+
+
+                        }
                     </section>
-                    <div className='flex py-10 justify-center'>
-                        <Pagination count={10} shape="rounded" variant='outlined' color='primary'
-                                    onChange={(e, value) => handelPageChange(value)}
-                        />
-                    </div>
+                    {
+                        product?.products.length > 0 &&
+                        <div className='flex py-10 justify-center'>
+                            <Pagination count={8} shape="rounded" variant='outlined' color='primary'
+                                        onChange={(e, value) => handelPageChange(value)}
+                            />
+                        </div>
+                    }
+
                 </div>
 
 

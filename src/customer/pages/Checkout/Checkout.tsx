@@ -1,8 +1,16 @@
-import React from 'react';
-import {Box, Button, FormControlLabel, Modal, Radio, RadioGroup, Typography} from "@mui/material";
+import React, {useEffect, useState} from 'react';
+import {Box, Button, FormControlLabel, Modal, Radio, RadioGroup} from "@mui/material";
 import AddressCard from "./AddressCard";
 import AddressForm from "./AddressForm";
 import PricingCard from "../Cart/PricingCard";
+import {useAppDispatch, useAppSelector} from "../../../state/store";
+import {createOrder, fetchUserAddress} from "../../../state/customer/OrderSlice";
+import {useFormik} from "formik";
+import {Address} from "../../../types/UserType";
+import {payWithVNPAy} from "../../../state/customer/PaymentSlice";
+import { toast } from 'sonner';
+import { clearCart, resetCartState } from "../../../state/customer/CartSlice";
+import { useNavigate } from "react-router-dom";
 
 
 const style = {
@@ -21,26 +29,73 @@ const paymentGatewayList = [
     {
         value: "VNPay",
         image: "https://cdn.haitrieu.com/wp-content/uploads/2022/10/Logo-VNPAY-QR-1.png",
-        label: ""
-    }
-    ,
+        label: "vnpay"
+    },
     {
-        value: "STRIPE",
-        image: "https://jnt.asia/wp-content/uploads/2024/01/Stripe-2.png",
-        label: ""
+        value: "COD",
+        image: "https://proship.vn/wp-content/uploads/2022/05/phi-cod-la-gi-phuong-thuc-hinh-thuc-thanh-toan-cod-la-gi-1.png",
+        label: "cod"
     }
-]
+];
 
 const Checkout = () => {
 
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-    const [paymentGateway, setPaymentGateway] = React.useState('VNPay');
+    const [paymentGateway, setPaymentGateway] = useState('VNPay');
+    const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
+    const dispatch = useAppDispatch();
+    const {addresses} = useAppSelector(state => state.order);
+    const {auth} = useAppSelector(state => state);
+    const navigate = useNavigate();
 
     const handlePaymentChange = (event: any) => {
-        setPaymentGateway(event.target.value)
+        setPaymentGateway(event.target.value);
     }
+
+    const handleAddressSelect = (address: any) => {
+        setSelectedAddress(address);
+    }
+
+    const handleCheckout = async () => {
+        if (selectedAddress) {
+            const data = {
+                addressId: selectedAddress.id,
+                deliveryAddress: selectedAddress
+            }
+            if (paymentGateway === "VNPay") {
+                try {
+                    await dispatch(payWithVNPAy({
+                        data: data,
+                        paymentMethod: paymentGateway,
+                        jwt: localStorage.getItem('jwt') || '',
+                    })).unwrap();
+                    await dispatch(clearCart(localStorage.getItem('jwt') || ''));
+                    navigate("/");
+                } catch (e) {
+                    toast.error("Lỗi khi thanh toán VNPay!");
+                }
+            } else {
+                try {
+                    await dispatch(createOrder({
+                        data: data,
+                        jwt: localStorage.getItem('jwt') || '',
+                    })).unwrap();
+                    await dispatch(clearCart(localStorage.getItem('jwt') || ''));
+                    navigate("/");
+                } catch (e) {
+                    toast.error("Lỗi khi tạo đơn hàng!");
+                }
+            }
+        } else {
+            toast.warning("Vui lòng chọn địa chỉ giao hàng!");
+        }
+    }
+
+    useEffect(() => {
+        dispatch(fetchUserAddress(auth.jwt || ''));
+    }, [auth.jwt]);
 
     return (
         <>
@@ -49,38 +104,35 @@ const Checkout = () => {
                     <div className='col-span-2 space-y-5'>
                         <div className='flex justify-between items-center'>
                             <h1 className='font-semibold'>
-                                select address
+                                Chọn địa chỉ giao hàng
                             </h1>
-                            <Button onClick={handleOpen}>
-                                add new address
-                            </Button>
+
                         </div>
 
                         <div className='text-xs font-medium space-y-5'>
-                            <p className='font-semibold'>
-                                saved addresses
-                            </p>
                             <div className='space-y-3'>
                                 {
-                                    [1, 1, 1, 1].map((item) => <AddressCard/>)
+                                    addresses?.map((item, index) => (
+                                        <AddressCard
+                                            item={item}
+                                            key={index}
+                                            onSelect={handleAddressSelect}
+                                            selected={selectedAddress?.id === item.id}
+
+                                        />
+                                    ))
                                 }
                             </div>
                         </div>
-
-                        <div className='py-4 px-5 rounded-md border'>
-                            <Button onClick={handleOpen}>
-                                add new address
-                            </Button>
-                        </div>
-
-
+                        
                     </div>
 
                     <div>
                         <div>
                             <div className='space-y-3 border p-5 rounded-md'>
-                                <h1 className='text-primary-color font-medium pb-2 text-center'>Choose payment
-                                    gateway</h1>
+                                <h1 className='text-primary-color font-medium pb-2 text-center'>
+                                    Chọn phương thức thanh toán
+                                </h1>
                                 <RadioGroup
                                     row
                                     aria-labelledby="demo-row-radio-buttons-group-label"
@@ -90,46 +142,39 @@ const Checkout = () => {
                                     value={paymentGateway}
                                 >
                                     {
-                                        paymentGatewayList.map((item) =>
+                                        paymentGatewayList.map((item, index) => (
                                             <FormControlLabel
-                                                className={`${item.value === paymentGateway ? "border-primary-color" :"" } border w-[45%] pr-2 rounded-md flex justify-center}`}
-                                                value={item.value} control={<Radio/>} label={
-                                                <img className={`${item.value === "stripe" ? "w-14" : ""} object-cover`}
-                                                     src={item.image} alt={item.label}/>}/>)
+                                                key={index}
+                                                className={`${item.value === paymentGateway ? "border-primary-color" : ""} border w-[45%] pr-2 rounded-md flex justify-center`}
+                                                value={item.value}
+                                                control={<Radio/>}
+                                                label={
+                                                    <img
+                                                        className={`${item.value === "cod" ? "w-14" : ""} object-cover`}
+                                                        src={item.image}
+                                                        alt={item.label}
+                                                    />
+                                                }
+                                            />
+                                        ))
                                     }
 
                                 </RadioGroup>
                             </div>
                         </div>
                         <div className='border rounded-md '>
-
                             <PricingCard/>
-
                             <div className='p-5'>
-                                <Button fullWidth variant='contained' sx={{py: "11px"}}>
-                                    checkout
+                                <Button fullWidth variant='contained' sx={{py: "11px"}} onClick={handleCheckout}>
+                                    thanh toán
                                 </Button>
                             </div>
                         </div>
                     </div>
-
-
                 </div>
-
-
             </div>
 
 
-            <Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-            >
-                <Box sx={style}>
-                    <AddressForm paymentGateway = {paymentGateway}/>
-                </Box>
-            </Modal>
         </>
     );
 };

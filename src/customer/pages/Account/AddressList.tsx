@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import UserAddressCard from "./UserAddressCard";
-import {Box, Button, Modal} from "@mui/material";
+import {Box, Button, Modal, CircularProgress, Typography} from "@mui/material";
 import {useAppDispatch, useAppSelector} from "../../../state/store";
 import {fetchUserAddress, fetchAddressById, deleteAddress} from '../../../state/customer/OrderSlice';
 import AddressForm from "../Checkout/AddressForm";
@@ -20,7 +20,7 @@ const style = {
     p: 4,
 };
 
-const Address = () => {
+const AddressList = () => {
     const [openAdd, setOpenAdd] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
@@ -28,7 +28,7 @@ const Address = () => {
     const [deletingAddress, setDeletingAddress] = useState<AddressType | null>(null);
     const [loadingEdit, setLoadingEdit] = useState(false);
 
-    const {addresses, address} = useAppSelector(state => state.order);
+    const {addresses, address, loading} = useAppSelector(state => state.order);
     const {auth} = useAppSelector(state => state);
     const dispatch = useAppDispatch();
 
@@ -36,8 +36,8 @@ const Address = () => {
         setLoadingEdit(true);
         await dispatch(fetchAddressById({ jwt: auth.jwt as string, addressId: item.id as number }));
         setEditingAddress(item.id as number);
-        setOpenEdit(true);
         setLoadingEdit(false);
+        setOpenEdit(true);
     };
 
     const handleDelete = (item: AddressType) => {
@@ -66,7 +66,7 @@ const Address = () => {
         if (!editingAddress) return;
         await dispatch(updateAddress({ addressId: editingAddress, deliveryAddress: values, jwt: auth.jwt as string }));
         setOpenEdit(false);
-        dispatch(fetchUserAddress(auth.jwt as string));
+        await dispatch(fetchUserAddress(auth.jwt as string));
     };
 
     useEffect(() => {
@@ -81,14 +81,21 @@ const Address = () => {
                         THÊM ĐỊA CHỈ
                     </Button>
                 </Box>
-                {addresses?.map((item, idx) => (
-                    <UserAddressCard
-                        key={idx}
-                        item={item}
-                        onEdit={() => handleEdit(item)}
-                        onDelete={() => handleDelete(item)}
-                    />
-                ))}
+                {loading ? (
+                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 5 }}>
+                        <CircularProgress color="primary" />
+                        <Typography sx={{ mt: 2 }}>Đang tải danh sách địa chỉ...</Typography>
+                    </Box>
+                ) : (
+                    addresses?.map((item, idx) => (
+                        <UserAddressCard
+                            key={idx}
+                            item={item}
+                            onEdit={() => handleEdit(item)}
+                            onDelete={() => handleDelete(item)}
+                        />
+                    ))
+                )}
             </div>
 
             {/* Modal Thêm địa chỉ */}
@@ -112,7 +119,10 @@ const Address = () => {
             >
                 <Box sx={style}>
                     {loadingEdit ? (
-                        <div>Đang tải...</div>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', py: 5 }}>
+                            <CircularProgress color="primary" />
+                            <Typography sx={{ mt: 2 }}>Đang tải thông tin địa chỉ...</Typography>
+                        </Box>
                     ) : (
                         <AddressForm 
                             handleClose={() => setOpenEdit(false)}
@@ -134,4 +144,4 @@ const Address = () => {
     );
 };
 
-export default Address;
+export default AddressList;

@@ -6,5 +6,5 @@ import {CartItem} from "../types/CartType";
 // 2: acc = 10 + 5 => 20
 // 3: acc=  20 + 5 => 25
 export const sumCartItemSellingPrice = (cartItems: CartItem[]) => {
-    return cartItems.reduce((acc, item) => acc + item.sellingPrice * item.quantity, 0)
+    return cartItems.reduce((acc, item) => acc + item.productPrice * item.quantity, 0)
 }
