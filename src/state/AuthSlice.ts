@@ -34,14 +34,16 @@ export const signin = createAsyncThunk<any, { data: any, navigate: any }>('/auth
             console.log('login data', data)
             const res: any = await api.post('/identity/auth/token', data)
             if (res.data.code === 1000) {
-                navigate('/')
+                const {roles} = res.data.result;
+                if (Array.isArray(roles) && roles.includes('ADMIN')) {
+                    navigate('/admin')
+                } else {
+                    navigate('/')
+                }
                 console.log('login success', res.data)
                 toast.success('Đăng nhập thành công')
                 localStorage.setItem('jwt', res.data.result.token)
-                const {token, roles} = res.data.result;
-
-                // localStorage.setItem('roles', JSON.stringify(roles));
-
+                // const {token, roles} = res.data.result;
                 return res.data.result
             } else {
                 toast.error('Kiểm tra lại thông tin đăng nhập')

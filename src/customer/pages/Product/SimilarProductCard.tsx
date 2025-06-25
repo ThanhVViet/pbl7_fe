@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
 const SimilarProductCard = ({ item }: { item: any }) => {
-    const { title, sellingPrice, price, images, id } = item;
+    const { title, sellingPrice, price, images, id, category } = item;
     const discount = price ? Math.round(((price - sellingPrice) / price) * 100) : 0;
     const navigate = useNavigate();
 
@@ -14,7 +14,7 @@ const SimilarProductCard = ({ item }: { item: any }) => {
                 scale: 1.02,
                 boxShadow: "0 10px 20px rgba(0,0,0,0.1)"
             }}
-            onClick={() => navigate(`/product/${id}`)}
+            onClick={() => navigate(`/product-details/${category?.categoryId}/${title}/${id}`)}
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
         >
             <motion.div 
