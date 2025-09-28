@@ -95,15 +95,11 @@ const ChatBot = () => {
         }
     };
 
-    // Helper: Try to parse product info from bot message (simple JSON or markdown list)
     function parseProductCards(text: string) {
-        // Simple heuristic: if message contains **Brand** or **Giá bán** or numbered list, try to split
         if (!text.match(/\*\*.*\*\*/)) return null;
-        // Split by numbered list
         const productBlocks = text.split(/\*\*\d+\./).filter(Boolean);
         if (productBlocks.length === 0) return null;
         return productBlocks.map((block, idx) => {
-            // Extract fields
             const titleMatch = block.match(/\*\*(.*?)\*\*/);
             const brandMatch = block.match(/Brand\):\*\*\s*([\w\s]+)/i);
             const colorMatch = block.match(/Color\):\*\*\s*([\w\s]+)/i);
